@@ -25,7 +25,28 @@ class ArtificialPancreasSystem:
         """Simulate physical activity (input feature: duration)."""
         # TODO: decrease glucose based on duration of exercise
         self.glucose_level -= duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN
-        print(self.glucose_level)
+        self.set_correct_glucose()
+        print(f"{duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN}")
+        print(f"Aftre excercising for {duration} mins, your new glucose level is {self.glucose_level} mg/dL \n")
+        
+    
+    def  correction_units(self):
+        return (self.glucose_level - self.target_glucose) / self.insulin_sensitivity
+    
+    
+    def set_correct_glucose(self):
+        if self.glucose_level <= 50:
+            self.glucose_level = 50
+        
+    
+    def deliver_insulin(self):
+        # To deliver Insulin, I would need to first calculate the amount of insulin to deliver
+        # Then deliver the insulin and adjust the glucose level accordingly
+        correction_units = self.correction_units()
+        self.glucose_level -= correction_units
+        self.set_correct_glucose()
+        
+        print(f"Delivered {correction_units} Units of Insulin. Your gluose level is now {self.glucose_level} mg/dL")
         
 
     def predict_action(self):
@@ -34,4 +55,17 @@ class ArtificialPancreasSystem:
         Acts like a decision function in a model.
         """
         # TODO: decide what to do if glucose is too high, too low, or stable
-        pass
+        # If gluuose level is too high, the system should deliver Insulin
+        if self.glucose_level > (self.target_glucose + self.tolerance):
+            print(f"The glucose level is high")
+            self.deliver_insulin()
+            return (f"deliver_insulin", self.glucose_level)
+            
+            
+        elif self.glucose_level in range(self.target_glucose, self.target_glucose+self.tolerance+1):
+            print("Glucose level is within Range")
+            return (f"maintain", self.glucose_level)
+            
+        else:
+            print(f"WARNING !!!, Your Glucose level is low !!")
+            return (f"warn_low_glucose", self.glucose_level)
