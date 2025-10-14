@@ -9,17 +9,24 @@ class ArtificialPancreasSystem:
 
     def __init__(self, glucose_level, insulin_sensitivity=1.0, target_glucose=100, tolerance=10):
         # TODO: initialize class attributes here
-        pass
+        self.glucose_level = glucose_level
+        self.insulin_sensitivity = insulin_sensitivity
+        self.target_glucose = target_glucose
+        self.tolerance = tolerance
+        
 
     def meal(self, carbs: float):
         """Simulate a meal event (input feature: carbs)."""
         # TODO: increase glucose based on carbs eaten
-        pass
+        self.glucose_level += carbs * ArtificialPancreasSystem.GLUCOSE_PER_CARB
+        print(f"After eating {carbs}G worth of carbs, your new glucose level is: {self.glucose_level}mg/dL\n")
 
     def exercise(self, duration: float):
         """Simulate physical activity (input feature: duration)."""
         # TODO: decrease glucose based on duration of exercise
-        pass
+        self.glucose_level -= duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN
+        print(self.glucose_level)
+        
 
     def predict_action(self):
         """
