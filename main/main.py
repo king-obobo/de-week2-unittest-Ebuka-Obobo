@@ -14,9 +14,21 @@ def main():
     excercise_duration, curr_glucose_level = system.exercise(300)
     print(f"After excercising for {excercise_duration} mins, your new glucose level is {curr_glucose_level} mg/dL \n")
     
-    print("============Predicting Action================")
+    print("\n============Predicting Action================")
     action, level = system.predict_action()
     print(action, level)    
+    
+    print("\n============Delivering Insulin when Glucose is Low================")
+    system.glucose_level = 60
+    print(system.glucose_level)
+    system.deliver_insulin()
+    print(system.glucose_level)  
+    
+    print("\n============Delivering Insulin when Glucose is High================")
+    system.glucose_level = 200
+    print(system.glucose_level)
+    system.deliver_insulin()
+    print(system.glucose_level)  
 
 if __name__ == "__main__":
     main()

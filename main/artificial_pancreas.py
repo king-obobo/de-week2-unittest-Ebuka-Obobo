@@ -38,15 +38,15 @@ class ArtificialPancreasSystem:
             raise ValueError(f"{duration} cannot be less than Zero")
         
         self.glucose_level -= duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN
-        self.set_min_glucose()
+        self._set_min_glucose()
         return duration, self.glucose_level
         
     
-    def  correction_units(self):
+    def correction_units(self):
         return (self.glucose_level - self.target_glucose) / self.insulin_sensitivity
     
     
-    def set_min_glucose(self):
+    def _set_min_glucose(self):
         if self.glucose_level <= 50:
             self.glucose_level = 50
         
@@ -54,10 +54,13 @@ class ArtificialPancreasSystem:
     def deliver_insulin(self):
         # To deliver Insulin, I would need to first calculate the amount of insulin to deliver
         # Then deliver the insulin, adjust the total insulin delivered and adjust the glucose level accordingly
-        correction_units = self.correction_units()
-        self.glucose_level -= correction_units
-        self.total_insulin_delivered += correction_units
-        self.set_min_glucose()
+        if self.glucose_level > (self.target_glucose + self.tolerance):
+            correction_units = self.correction_units()
+            self.glucose_level -= correction_units
+            self.total_insulin_delivered += correction_units
+            self._set_min_glucose()
+        else:
+            pass
         
         
 
