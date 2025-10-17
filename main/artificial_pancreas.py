@@ -28,6 +28,7 @@ class ArtificialPancreasSystem:
         self.glucose_level += carbs * ArtificialPancreasSystem.GLUCOSE_PER_CARB
         return carbs, self.glucose_level
 
+
     def exercise(self, duration: float| int):
         """Simulate physical activity (input feature: duration)."""
         # TODO: decrease glucose based on duration of exercise
@@ -43,7 +44,7 @@ class ArtificialPancreasSystem:
         
     
     def correction_units(self):
-        return (self.glucose_level - self.target_glucose) / self.insulin_sensitivity
+        return abs((self.glucose_level - self.target_glucose) / self.insulin_sensitivity)
     
     
     def _set_min_glucose(self):
@@ -54,16 +55,13 @@ class ArtificialPancreasSystem:
     def deliver_insulin(self):
         # To deliver Insulin, I would need to first calculate the amount of insulin to deliver
         # Then deliver the insulin, adjust the total insulin delivered and adjust the glucose level accordingly
-        if self.glucose_level > (self.target_glucose + self.tolerance):
-            correction_units = self.correction_units()
-            self.glucose_level -= correction_units
-            self.total_insulin_delivered += correction_units
-            self._set_min_glucose()
-        else:
-            pass
-        
-        
+        correction_units = self.correction_units()
+        self.glucose_level -= correction_units
+        self.total_insulin_delivered += correction_units
+        self._set_min_glucose()
 
+        
+        
     def predict_action(self):
         """
         Predict and apply an appropriate system action.
@@ -75,7 +73,6 @@ class ArtificialPancreasSystem:
             print(f"The glucose level is high")
             self.deliver_insulin()
             return (f"deliver_insulin", self.glucose_level)
-            
             
         elif self.glucose_level in range(self.target_glucose, self.target_glucose+self.tolerance+1):
             print("Glucose level is within Range")
