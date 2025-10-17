@@ -7,10 +7,12 @@ def main():
     print(f"Your current Glucose level is: {system.glucose_level}mg/dL\n")
     
     print("===========Eating some food===============")
-    system.meal(80)
+    carbs_eaten, curr_glucose_level = system.meal(80.0)
+    print(f"After eating {carbs_eaten}G of food, the current glucose level is {curr_glucose_level}mg/dL")
     
     print("\n============Excercising================")
-    system.exercise(300)
+    excercise_duration, curr_glucose_level = system.exercise(300)
+    print(f"After excercising for {excercise_duration} mins, your new glucose level is {curr_glucose_level} mg/dL \n")
     
     print("============Predicting Action================")
     action, level = system.predict_action()

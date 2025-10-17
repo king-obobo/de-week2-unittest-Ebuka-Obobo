@@ -7,46 +7,58 @@ class ArtificialPancreasSystem:
     GLUCOSE_BURN_PER_MIN = 0.3  # fixed decrease per minute of exercise
 
 
-    def __init__(self, glucose_level, insulin_sensitivity=1.0, target_glucose=100, tolerance=10):
+    def __init__(self, glucose_level: int|float, insulin_sensitivity: int|float=1.0, target_glucose: int|float=100, tolerance: int|float=10, total_insulin_delivered = 0):
         # TODO: initialize class attributes here
         self.glucose_level = glucose_level
         self.insulin_sensitivity = insulin_sensitivity
         self.target_glucose = target_glucose
         self.tolerance = tolerance
+        self.total_insulin_delivered = total_insulin_delivered
         
 
-    def meal(self, carbs: float):
+    def meal(self, carbs: float| int):
         """Simulate a meal event (input feature: carbs)."""
         # TODO: increase glucose based on carbs eaten
+        if not isinstance(carbs, (float, int)):
+            raise ValueError(f"Invalid carbs input: expected a number, got {type(carbs).__name__}")
+            
+        if carbs < 0:
+            raise ValueError(f"{carbs} cannot be less than Zero")
+        
         self.glucose_level += carbs * ArtificialPancreasSystem.GLUCOSE_PER_CARB
-        print(f"After eating {carbs}G worth of carbs, your new glucose level is: {self.glucose_level}mg/dL\n")
+        return carbs, self.glucose_level
 
-    def exercise(self, duration: float):
+    def exercise(self, duration: float| int):
         """Simulate physical activity (input feature: duration)."""
         # TODO: decrease glucose based on duration of exercise
+        if not isinstance(duration, (float, int)):
+            raise ValueError(f"Invalid duration input: expected a number, got {type(duration).__name__}")
+            
+        if duration < 0:
+            raise ValueError(f"{duration} cannot be less than Zero")
+        
         self.glucose_level -= duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN
-        self.set_correct_glucose()
-        print(f"{duration * ArtificialPancreasSystem.GLUCOSE_BURN_PER_MIN}")
-        print(f"Aftre excercising for {duration} mins, your new glucose level is {self.glucose_level} mg/dL \n")
+        self.set_min_glucose()
+        return duration, self.glucose_level
         
     
     def  correction_units(self):
         return (self.glucose_level - self.target_glucose) / self.insulin_sensitivity
     
     
-    def set_correct_glucose(self):
+    def set_min_glucose(self):
         if self.glucose_level <= 50:
             self.glucose_level = 50
         
     
     def deliver_insulin(self):
         # To deliver Insulin, I would need to first calculate the amount of insulin to deliver
-        # Then deliver the insulin and adjust the glucose level accordingly
+        # Then deliver the insulin, adjust the total insulin delivered and adjust the glucose level accordingly
         correction_units = self.correction_units()
         self.glucose_level -= correction_units
-        self.set_correct_glucose()
+        self.total_insulin_delivered += correction_units
+        self.set_min_glucose()
         
-        print(f"Delivered {correction_units} Units of Insulin. Your gluose level is now {self.glucose_level} mg/dL")
         
 
     def predict_action(self):
