@@ -6,6 +6,8 @@ dist/
 wheels/
 *.egg-info
 .python-version
+.gitignore
+.pytest_cache
 
 # Virtual environments
 .venv

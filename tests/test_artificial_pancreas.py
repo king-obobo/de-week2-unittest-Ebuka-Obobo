@@ -115,6 +115,7 @@ def test_insulin_delivered_attribute(system):
     (109, "maintain"),
     (120, "deliver_insulin"),
     (200, "deliver_insulin"),
+    (89, "warn_low_glucose"),
     (80, "warn_low_glucose"),
     (60, "warn_low_glucose")
 ])
