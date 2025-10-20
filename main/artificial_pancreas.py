@@ -29,7 +29,7 @@ class ArtificialPancreasSystem:
         return carbs, self.glucose_level
 
 
-    def exercise(self, duration: float| int):
+    def exercise(self, duration: float | int):
         """Simulate physical activity (input feature: duration)."""
         # TODO: decrease glucose based on duration of exercise
         if not isinstance(duration, (float, int)):
@@ -61,23 +61,26 @@ class ArtificialPancreasSystem:
         self._set_min_glucose()
 
         
-        
     def predict_action(self):
         """
         Predict and apply an appropriate system action.
         Acts like a decision function in a model.
         """
+        
         # TODO: decide what to do if glucose is too high, too low, or stable
         # If gluuose level is too high, the system should deliver Insulin
-        if self.glucose_level > (self.target_glucose + self.tolerance):
-            print(f"The glucose level is high")
+        tolerable_min_glucose_level = self.target_glucose - self.tolerance
+        tolerable_max_glucose_level = self.target_glucose + self.tolerance
+        
+        if self.glucose_level > tolerable_max_glucose_level:
+            # print(f"The glucose level is high")
             self.deliver_insulin()
             return (f"deliver_insulin", self.glucose_level)
             
-        elif self.glucose_level in range(self.target_glucose, self.target_glucose+self.tolerance+1):
-            print("Glucose level is within Range")
-            return (f"maintain", self.glucose_level)
+        elif self.glucose_level < tolerable_min_glucose_level:
+            # print(f"WARNING !!!, Your Glucose level is low !!")
+            return (f"warn_low_glucose", self.glucose_level)
             
         else:
-            print(f"WARNING !!!, Your Glucose level is low !!")
-            return (f"warn_low_glucose", self.glucose_level)
+            # print("Glucose level is within Range")
+            return (f"maintain", self.glucose_level)
